@@ -1,0 +1,21 @@
+<template>
+    <lightning-card>   
+        <div >
+            <lightning-datatable
+                    key-field="productCode"
+                    data={productData}
+                    columns={columns}
+                    hide-checkbox-column="true"  
+                    show-row-number-column="true">
+            </lightning-datatable>
+        </div>
+        <div class="slds-var-m-vertical_medium">
+            <template if:true={showPagination}>
+                <p class="slds-var-m-vertical_medium">
+                        Displaying {startingRecord} to {endingRecord} of {totalRecountCount} records.
+                        Page {page} of {totalPage}. </p>
+                <c-product-pagination onprevious={previousHandler} onnext={nextHandler}></c-product-pagination>
+            </template>
+        </div>
+    </lightning-card>
+</template>

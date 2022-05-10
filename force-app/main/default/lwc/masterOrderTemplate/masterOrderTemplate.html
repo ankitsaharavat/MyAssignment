@@ -1,0 +1,40 @@
+<template>
+    <lightning-card>
+        <lightning-button label="Submit Order" variant="brand-outline" title="Submit Order" onclick={handleClick} 
+            class="slds-var-m-right_x-small slds-float_right" disabled={disableOrderButton}>
+        </lightning-button>
+    
+        <br/>
+        <div class="slds-var-m-around_large">
+            <template if:true={isLoaded}>
+                <div class="slds-is-relative">
+                    <section  class="slds-modal slds-fade-in-open">                
+                            <lightning-spinner variant="brand" alternative-text="Loading..."></lightning-spinner>                
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open" style="width:100%; height:70%; margin:auto;"></div>
+                </div>
+            </template> 
+        </div>
+        <lightning-layout vertical-align="center" >
+            <div >
+            <div class="slds-grid slds-grid--pull-padded" style="padding-left: 15px;">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-layout-item padding="around-small">
+                        <div class="custom-box">
+                            <c-product-template></c-product-template>
+                        </div>
+                    </lightning-layout-item>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-layout-item padding="around-small">
+                        <div class="custom-box">
+                            <c-order-products onpass={getValueFromChild}></c-order-products>
+                        </div>
+                    </lightning-layout-item>
+                </div>
+            </div> 
+        </div>
+        </lightning-layout>
+    </lightning-card>
+</template>
