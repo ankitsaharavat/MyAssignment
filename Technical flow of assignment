@@ -1,0 +1,27 @@
+Technical execution of LWC components:
+Step 1: Created masterOrderTemplate component and embedded productTemplate component as child 1 to show available product data and orderProduct template as child 2 to 
+show selected product data from first component/table (productTemplate)
+Step 2: Getting product’s data using wire property from SFDC table in productTemplate component through ProductOrderController.getProductList apex method.
+Step 3: Binding data using lightning data table and added an action button to add/pass products to orderProduct component.
+Step 4: Created a LWC component called productPagination to use pagination for both the table.
+Step 5: On click of “+” or add button calling handleRowAction js function (in productTemplate) and passing the selected product data to orderProduct via 
+LMS (Lightning Messaging System) along with necessary nodes.
+Step 6: Using handleSubscribe function (in orderProduct) to receive the product data from productTemplate then checking the data. If same product is already there 
+in array (matching with productcode) then increasing the quantity by 1 and updating the total price accordingly else pushing the data to array. Also passing the same array to masterOrderTemplate in the same function via dispatchevent and handled in getValueFromChild function in masterOrderTemplate, since “Submit Order” button is available on masterOrderTemplate component.
+Step 7: Onclick of “Submit Order” button calling handleClick function and executing ProductOrderController.insertOrder to insert the Order and OrderItems.
+Note: I am passing two parameters to apex a) JSON of selected product data available in orderProduct and b) existingOrderId. I will update later about 
+existingOrderId parameter in STEP 12.
+Step 8: Checking if existingOrderId is blank, if yes then inserting an Order and it’s OrdeItems and calling sendProductsToExtSystem apex method 
+(passing OrderId as parameter) in ProductOrderContHelper to send Order’s data to external system else if existingOrderId is not blank then passing 
+existingOrderId to sendProductsToExtSystem apex method in ProductOrderContHelper to send Order’s data to external system.
+Step 9: Calling ProductOrderContHelper.callout (A future method) from sendProductsToExtSystem method. Preparing the expected JSON through apex map and sending to 
+external system through REST integration. If response status code is 200 then updating the Status of Order/OrderItem as “Activated” and publishing the platform 
+event ProductOrderEvent__e to set the success message as “true” of transaction else if status code is not 200 then publishing the event ProductOrderEvent__e to 
+set the failure message as “false” of transaction.
+Note: Handling this platform event in masterOrderTemplate to disable the action buttons “+” and “Submit Order” if transaction is success.
+Step 10: Using the lightning/empApi to handle the platform event in handleSubscribe function (in masterOrderTemplate component) and if it’s success then calling the 
+disabledButtons function to disable the buttons and then showing the success toast message else showing error message toast.
+Step 11: In disabledButtons function setting the disableOrderButton property as “true” to disable the “Submit Order” button and then calling function of 
+productTemplate component (child) to disable the “+” or Add button.
+Step 12: If somehow after insertion of Order/OrderItems callout fails then “Submit Order” and “+” (Add) button will not get disabled and we can hit “Submit Order” 
+button again to execute the transaction and passing the Order Id that we have already received after Order/OrderItem insertion. In this case we are not inserting Order/Item again only passing the existing OrderId to get Order/OrderItems and then directly calling the callout.
