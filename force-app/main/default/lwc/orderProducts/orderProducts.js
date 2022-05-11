@@ -10,7 +10,7 @@ const columns = [
 ];
 
 export default class OrderProducts extends LightningElement {
-    @track selectedProductData = [];
+    selectedProductData = [];
     @track productData = [];
     @track columns = columns;
     @track subscription = null;
@@ -18,11 +18,10 @@ export default class OrderProducts extends LightningElement {
 
     // for pagination
     @track page = 1; //this will initialize 1st page
-    @track items = []; //it contains all the records.
-    @track data = []; //data to be displayed in the table
+    items = []; //it contains all the records.
     @track startingRecord = 1; //start record position per page
     @track endingRecord = 0; //end record position per page
-    @track pageSize = 5; //default value we are assigning
+    pageSize = 5; //default value we are assigning
     @track totalRecountCount = 0; //total record count received from all retrieved records
     @track totalPage = 0; //total number of page is needed to display all records
 
@@ -44,24 +43,22 @@ export default class OrderProducts extends LightningElement {
     }
 
     handleMessage(event){
-        var rowMatched = false;
-        var i;
+        let rowMatched = false;
         if(event){
             let receiveProducts = event.productsToSend;
-            console.log('receiveProducts==>'+receiveProducts.name);
-            for(i=0; i<this.selectedProductData.length; i++){
-                if(this.selectedProductData[i].productCode === receiveProducts.productCode){
-                    this.selectedProductData[i].Quantity += 1;
-                    this.selectedProductData[i].TotalPrice = this.selectedProductData[i].Quantity * this.selectedProductData[i].UnitPrice;
+            // eslint-disable-next-line consistent-return
+            this.selectedProductData.forEach(function (item) {
+                if(item.productCode === receiveProducts.productCode){
+                    item.Quantity += 1;
+                    item.TotalPrice = item.Quantity * item.UnitPrice;
                     rowMatched = true;
-                    break;
+                    return null;
                 }
-            }
+            });
             if(!rowMatched){
                 this.selectedProductData.push(JSON.parse(JSON.stringify(receiveProducts)));
             }
             this.productData = [...this.selectedProductData];
-            console.log( 'Value from Child 1 LWC is []' + JSON.stringify(this.productData) );
 
             //paginaions
             this.items = this.productData;

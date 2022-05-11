@@ -22,18 +22,16 @@ export default class ProductTemplate extends LightningElement {
             } 
         ];
     }
-    @track productData = [];umns;
-    @track disa = true;
+    @track productData = [];
     @wire(MessageContext)
             messageContext;
 
     // for paginations
     @track page = 1; //this will initialize 1st page
-    @track items = []; //it contains all the records.
-    @track data = []; //data to be displayed in the table
+    items = []; //it contains all the records.
     @track startingRecord = 1; //start record position per page
     @track endingRecord = 0; //end record position per page
-    @track pageSize = 5; //default value we are assigning
+    pageSize = 5; //default value we are assigning
     @track totalRecountCount = 0; //total record count received from all retrieved records
     @track totalPage = 0; //total number of page is needed to display all records
 
@@ -58,7 +56,7 @@ export default class ProductTemplate extends LightningElement {
         } 
         else if (error) {
             this.error = error;
-            this.data = undefined;
+            this.productData = undefined;
         }
     }
 
@@ -96,7 +94,7 @@ export default class ProductTemplate extends LightningElement {
     }  
 
     handleRowAction(event) {
-        var myProduct = {"name": event.detail.row.Name, 
+        let myProduct = {"name": event.detail.row.Name, 
                         "productCode": event.detail.row.ProductCode,
                         "UnitPrice": event.detail.row.UnitPrice, 
                         "Quantity": 1, 

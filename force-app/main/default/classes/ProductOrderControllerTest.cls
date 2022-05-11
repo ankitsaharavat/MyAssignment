@@ -1,6 +1,13 @@
+/*
+*class name: ProductOrderControllerTest
+*created by: Ankit 5/7/2022
+*description: test class for ProductOrderController and it's helper
+*/
+
 @isTest
 public with sharing class ProductOrderControllerTest {
 
+    //test setup method
     @TestSetup
     static void createTestData() {
         List<Product2> pList = TestDataFactory.createProducts(true, 2, 'SLA');
@@ -8,6 +15,7 @@ public with sharing class ProductOrderControllerTest {
         List<Account> accList = TestDataFactory.createAccounts(true, 1, 'TestName');
         Service_Endpoints__c se = TestDataFactory.createServiceCS(true, Util.PUSHPRODUCTS);
     }
+
     static testMethod void getProductListTest() {
         createTestData();
         System.Test.startTest();
@@ -32,7 +40,6 @@ public with sharing class ProductOrderControllerTest {
                 'Product2Id' => pbe.Product2Id
             });
         }
-        system.debug('thisOrderItems===> '+JSON.serialize(thisOrderItems));
 
         // Set mock callout class 
         System.Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
@@ -44,6 +51,5 @@ public with sharing class ProductOrderControllerTest {
         System.assertEquals(!String.isEmpty(oIdExist), true, 'Order Id should be return');
         System.Test.stopTest();
         System.assertEquals(!pricebookEntryList.isEmpty(), true, 'PriceBookEntry list should not be empty');
-        //System.assertEquals(!pricebookEntryList.isEmpty(), true, 'PriceBookEntry list should not be empty');
     }
 }

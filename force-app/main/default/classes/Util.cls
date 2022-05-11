@@ -1,3 +1,9 @@
+/*
+*class name: Util
+*created by: Ankit 5/7/2022
+*description: This class has defined for Contstants
+*/
+
 public with sharing class Util {
 
     public static String DRAFT = 'Draft';

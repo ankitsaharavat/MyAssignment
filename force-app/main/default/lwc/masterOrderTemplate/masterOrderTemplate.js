@@ -9,7 +9,6 @@ import {
 export default class MasterOrderTemplate extends LightningElement {
     channelName = '/event/ProductOrderEvent__e';
     @track selectedProducts = [];
-    @track orderName;
     @track disableOrderButton = false;
     @track isLoaded = false;
     orderId = '';
@@ -61,29 +60,30 @@ export default class MasterOrderTemplate extends LightningElement {
     registerErrorListener() {
         // Invoke onError empApi method
         onError((error) => {
-            console.log('Received error from server: ', JSON.stringify(error));
             // Error contains the server-side error
+            const toastEvent = new ShowToastEvent({
+                title:'Some unexpected error!',
+                message: error,
+                variant:'error'
+            });
+            this.dispatchEvent(toastEvent);
             this.isLoaded = false;
         });
     }
 
     getValueFromChild( event ) {
-        console.log( 'Value from Child2 LWC is ' + JSON.stringify(event.detail) );
+        //console.log( 'Value from Child2 LWC is ' + JSON.stringify(event.detail) );
         this.selectedProducts = event.detail;
     }
 
     handleClick(){
-        console.log('handleClick this.orderId' + this.orderId);
         this.isLoaded = true;
-        console.log('selectedProducts== > '+JSON.stringify(this.selectedProducts));
         insertOrder({productJSON : JSON.stringify(this.selectedProducts),
             existingOrderId: this.orderId})
         .then(result=>{
-            console.log('after save result' + JSON.stringify(result));
             if(result !== undefined){
                 this.orderId = result;
             }
-            console.log('after save this.orderId' + this.orderId);
         })
         .catch(error=>{
            window.console.log(error.message);
